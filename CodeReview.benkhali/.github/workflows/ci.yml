@@ -1,0 +1,35 @@
+name: ci.yml
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Step 1: Set up JDK for Windows
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '23'
+
+      # Step 2: Build using Maven
+      - name: Build with Maven
+        run: mvn clean install
+
+      # Step 3: Run Checkstyle
+      - name: Checkstyle
+        run: mvn checkstyle:check
+
+      # Step 4: Run Unit Tests
+      - name: Run Tests
+        run: mvn test
+
+      # Step 5: Run Coverage Report
+      - name: Cobertura Coverage
+        run: mvn cobertura:cobertura
